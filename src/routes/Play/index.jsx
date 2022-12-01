@@ -11,7 +11,6 @@ export default function Play() {
         function handleResize() {
             const display = document.getElementsByClassName("board-container")[0];
             if(display) {
-                console.log(display.offsetWidth - 20)
                 setChessboardSize(display.offsetWidth - 20);
             }
         }
@@ -23,17 +22,17 @@ export default function Play() {
 
     return (
         <Container>
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, my: 2 }}>
             <Grid container spacing={2}
                 direction="row"
                 alignItems="center"
-                style={{ minHeight: '85vh' }}
+                style={{ minHeight: '83vh' }}
             >
-                <Grid item className="board-container" xs={12} md={6}>
+                <Grid item className="board-container" xs={12} md={7} lg={8}>
                     <Board boardWidth={chessboardSize} />
                 </Grid>
-                <Grid item xs={12} md={6}>
-                    <GameDetails />
+                <Grid item xs={12} md={5} lg={4}>
+                    <GameDetails height={chessboardSize} />
                 </Grid>
             </Grid>
         </Box>

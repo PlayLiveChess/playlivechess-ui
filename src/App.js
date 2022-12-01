@@ -16,7 +16,7 @@ function App() {
     >
       <CssBaseline />
       <ResponsiveAppBar />
-      <Outlet />
+      <Outlet/>
       <StickyFooter />
     </Box>
   );

@@ -110,8 +110,8 @@ function ResponsiveAppBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <Link to={page.link} >
+              {pages.map((page, index) => (
+                <Link to={page.link} key={index} >
                 <MenuItem key={page.text} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{page.text}</Typography>
                 </MenuItem>
@@ -140,8 +140,8 @@ function ResponsiveAppBar() {
             PLC
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Link to={page.link}>
+            {pages.map((page, index) => (
+              <Link to={page.link} key={index}>
                 <Button
                   key={page.text}
                   onClick={handleCloseNavMenu}
