@@ -6,7 +6,7 @@ import Player from "./Player";
 
 export default function GameDetails({ height }) {
     return (
-        <Box height={Math.max(height, 650)} width={"100%"}>
+        <Box height={height} width={"100%"}>
             <Stack height={"100%"} width={"100%"} spacing={2}>
                 <Box height={"10%"} width={"100%"}>
                     <Player color={'black'} name={'Harshit Gulati'} rating={'1100'} />

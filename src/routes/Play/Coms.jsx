@@ -17,7 +17,6 @@ export default function Coms(props) {
             {
                 props.coms.map((com, index) => {
                     return (
-                        <>
                         <Grid container key={index}>
                         <Grid item xs={2} >
                             {
@@ -40,7 +39,6 @@ export default function Coms(props) {
                             </Typography>
                         </Grid>
                         </Grid>
-                        </>
                     )
                 })
             }
