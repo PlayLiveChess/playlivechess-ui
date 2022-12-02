@@ -37,7 +37,7 @@ const startConnectPhase =  async (dispatch) => {
     dispatch(incrementActiveStep())
 }
 
-function PreGame({height, preGamePhase, activeStep, sendJSON}) {
+function PreGame({height, preGamePhase, activeStep, playerDetails, sendJSON}) {
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -73,9 +73,12 @@ function PreGame({height, preGamePhase, activeStep, sendJSON}) {
             <CardActions sx={{maxHeight: '10%', width: '100%', overflowY: 'auto', position: 'absolute', bottom: '0px'}}>
                 <Button disabled={!(preGamePhase === 1 && activeStep === -1)} variant="outlined" size="large" sx={{width: '100%'}}
                     onClick={() => {
-                        sendJSON({
+                        let obj = {
                             'type': 'queue'
-                        })
+                        }
+                        if(playerDetails)
+                            obj['playerDetails'] = playerDetails
+                        sendJSON(obj)
                         dispatch(incrementActiveStep())
                     }}
                 >
@@ -89,6 +92,7 @@ function PreGame({height, preGamePhase, activeStep, sendJSON}) {
 const mapStateToProps = (state) => ({
     preGamePhase: state.play.preGamePhase,
     activeStep: state.play.activeStep,
+    playerDetails: state.play.playerDetails,
 })
 
 export default connect(mapStateToProps)(PreGame);

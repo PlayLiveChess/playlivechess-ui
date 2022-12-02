@@ -36,7 +36,8 @@ function Coms({coms, height}) {
                         <Grid item xs={6} >
                             <Typography sx={{fontSize: 14}} color="text.secondary"
                                 gutterBottom>
-                                    {com.value ? com.value : com.success ? com.success : ''}
+                                    {com.value ? com.value : com.success ? com.success
+                                        : com.color ? com.color : ''}
                             </Typography>
                         </Grid>
                         </Grid>

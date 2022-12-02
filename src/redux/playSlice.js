@@ -23,10 +23,17 @@ export const playSlice = createSlice({
         game: new Chess(),
         moves: [],
         coms: [],
-        playerDetails: undefined,
-        opponentDetails: undefined,
+        playerDetails: {
+            'name': 'Player',
+            'rating': 1000
+        },
+        opponentDetails: {
+            'name': 'Player',
+            'rating': 1000
+        },
         playerColor: COLOR.WHITE,
         pending: '',
+        result: {},
     },
     reducers: {
         // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -45,6 +52,9 @@ export const playSlice = createSlice({
         },
         setActiveStep: (state, action) => {
             state.activeStep = action.payload
+        },
+        setPreGamePhase: (state, action) => {
+            state.preGamePhase = action.payload
         },
         setGameServerAddress: (state, action) => {
             state.gameServerAddress = action.payload
@@ -82,7 +92,7 @@ export const playSlice = createSlice({
             }
         },
         startGame: (state, action) => {
-            state.opponentDetails = action.payload.opponent
+            state.opponentDetails = action.payload.opponentDetails
             state.playerColor = action.payload.color
             state.stage = STAGE.IN_GAME
             state.game = new Chess()
@@ -97,6 +107,12 @@ export const playSlice = createSlice({
             
             if(move)
                 state.moves.push(action.payload)
+        },
+        outcome: (state, action) => {
+            if(action.payload.result === 'win')
+                action.payload.result = state.playerColor === COLOR.WHITE ? "1-0" : "0-1"
+            state.result = action.payload
+            state.stage = STAGE.RESULT
         }
     },
 })
@@ -105,6 +121,6 @@ export const playSlice = createSlice({
 export const { setStage, nextPreGamePhase, incrementActiveStep, setActiveStep,
     setGameServerAddress, appendMove, clearMoves, setPlayerDetails, setGame, makeMove,
     setOpponentDetails, setPlayerColor, setPending, handleReply, startGame,
-    appendCom, clearCom } = playSlice.actions
+    appendCom, clearCom, setPreGamePhase, outcome } = playSlice.actions
 
 export default playSlice.reducer

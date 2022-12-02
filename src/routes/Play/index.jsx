@@ -2,15 +2,24 @@ import { Container, Box } from "@mui/material";
 import Grid from '@mui/material/Unstable_Grid2';
 import { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { appendCom, handleReply, incrementActiveStep, makeMove, nextPreGamePhase, setPending, STAGE, startGame } from "../../redux/playSlice";
+import { appendCom, handleReply, incrementActiveStep, makeMove, nextPreGamePhase, outcome, setActiveStep, setPending, setPreGamePhase, setStage, STAGE, startGame } from "../../redux/playSlice";
 import Board from "./Board";
 import GameDetails from "./GameDetails";
 import PreGame from "./PreGame";
 import { w3cwebsocket } from "websocket";
 
 const MIN_DETAILS_HEIGHT = 650
+const OUTCOME_MAP = {
+    1: 'CHECKMATE',
+    2: 'STALEMATE',
+    3: 'INSUFFICIENT_MATERIAL',
+    4: 'SEVENTYFIVE_MOVES',
+    5: 'FIVEFOLD_REPETITION ',
+    6: 'FIFTY_MOVES',
+    7: 'THREEFOLD_REPETITION ',
+}
 
-function Play({stage, gameServerAddress, dispatch}) {
+function Play({stage, gameServerAddress, playerColor, result, dispatch}) {
     const [chessboardSize, setChessboardSize] = useState(MIN_DETAILS_HEIGHT);
     const [socket, setSocket] = useState(undefined)
 
@@ -44,16 +53,39 @@ function Play({stage, gameServerAddress, dispatch}) {
             client.onmessage = ({data}) => {
                 data = JSON.parse(data)
                 console.log("message received", data)
-                if(data.type === 'reply')
+                if(data.type === 'reply') {
                     dispatch(handleReply(data))
+                }
                 else if(data.type === 'start') {
                     dispatch(startGame(data))
                 }
                 else if(data.type === 'opponent') {
                     dispatch(makeMove(data.value))
                 }
+                else if(data.type === 'disconnect') {
+                    let obj = {
+                        'result': 'win',
+                        'reason': 'DISCONNECT'
+                    }
+                    dispatch(outcome(obj))
+                }
+
+                if(data.outcome) {
+                    console.log(data)
+                    let obj = {
+                        'result': data.outcome.result,
+                        'reason': OUTCOME_MAP[parseInt(data.outcome.termination)]
+                    }
+                    dispatch(outcome(obj))
+                }
                 data.direction = 'down'
                 dispatch(appendCom(data))
+            }
+
+            client.onclose = () => {
+                dispatch(setActiveStep(0))
+                dispatch(setPreGamePhase(0))
+                dispatch(setStage(STAGE.PRE_GAME))
             }
 
             setSocket(client)
@@ -101,6 +133,8 @@ const mapStateToProps = (state) => ({
     stage: state.play.stage,
     gameServerAddress: state.play.gameServerAddress,
     game: state.play.game,
+    playerColor: state.play.playerColor,
+    result: state.play.result,
 })
 
 export default connect(mapStateToProps) (Play);

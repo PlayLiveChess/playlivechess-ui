@@ -2,18 +2,11 @@ import { useRef } from 'react';
 
 import { Chessboard } from 'react-chessboard';
 import { connect } from 'react-redux';
-import { appendMove, setGame, setPending } from '../../redux/playSlice';
+import { appendMove, setGame, setPending, STAGE } from '../../redux/playSlice';
+import Result from './Result';
 
-function Board({ boardWidth, playerColor, game, sendJSON, dispatch }) {
+function Board({ boardWidth, playerColor, game, sendJSON, stage, result, dispatch }) {
     const chessboardRef = useRef();
-
-    // function safeGameMutate(modify) {
-    //     setGame((g) => {
-    //         const update = { ...g };
-    //         modify(update);
-    //         return update;
-    //     });
-    // }
 
     function onDrop(sourceSquare, targetSquare) {
         const gameCopy = { ...game };
@@ -46,7 +39,7 @@ function Board({ boardWidth, playerColor, game, sendJSON, dispatch }) {
     }
 
     return (
-        <div>
+        <div id='board-parent' style={{position: 'relative'}}>
             <Chessboard
                 id="PlayVsPlay"
                 animationDuration={200}
@@ -60,13 +53,18 @@ function Board({ boardWidth, playerColor, game, sendJSON, dispatch }) {
                 }}
                 ref={chessboardRef}
             />
+
+            <Result open={stage === STAGE.RESULT} result={result} parentId={"board-parent"}
+                playerColor={playerColor} />
         </div>
     );
 }
 
 const mapStateToProps = (state) => ({
     playerColor: state.play.playerColor,
-    game: state.play.game
+    game: state.play.game,
+    stage: state.play.stage,
+    result: state.play.result,
 })
 
 export default connect(mapStateToProps)(Board);
