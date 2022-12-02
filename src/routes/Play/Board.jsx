@@ -1,67 +1,70 @@
-import { useRef, useState } from 'react';
-import Chess from 'chess.js';
+import { useRef } from 'react';
 
 import { Chessboard } from 'react-chessboard';
+import { connect } from 'react-redux';
+import { appendMove, setGame, setPending, STAGE } from '../../redux/playSlice';
+import Result from './Result';
 
-export default function Board({ boardWidth }) {
+function Board({ boardWidth, playerColor, game, sendJSON, stage, result, dispatch }) {
     const chessboardRef = useRef();
-    const [game, setGame] = useState(new Chess());
-
-    function safeGameMutate(modify) {
-        setGame((g) => {
-            const update = { ...g };
-            modify(update);
-            return update;
-        });
-    }
 
     function onDrop(sourceSquare, targetSquare) {
         const gameCopy = { ...game };
-        const move = gameCopy.move({
+        const piece = game.get(sourceSquare)
+        
+        if(piece.color !== playerColor.charAt(0)) {
+            console.log('Not allowed!', piece.color, playerColor)
+            return null
+        }
+
+        const moveObj = {
             from: sourceSquare,
             to: targetSquare,
             promotion: 'q' // always promote to a queen for example simplicity
-        });
-        setGame(gameCopy);
+        }
+
+        const move = gameCopy.move(moveObj);
+
+        if(move) {
+            dispatch(setPending('move'))
+            sendJSON({
+                type: 'move',
+                value: move.san
+            })
+            dispatch(appendMove(move.san))
+        }
+
+        dispatch(setGame(gameCopy));
         return move;
     }
 
     return (
-        <div>
+        <div id='board-parent' style={{position: 'relative'}}>
             <Chessboard
                 id="PlayVsPlay"
                 animationDuration={200}
                 boardWidth={boardWidth}
-                position={game.fen()}
+                position={(game) ? game.fen() : undefined}
                 onPieceDrop={onDrop}
+                boardOrientation={playerColor}
                 customBoardStyle={{
                     borderRadius: '4px',
                     boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5)'
                 }}
                 ref={chessboardRef}
             />
-            {/* <button
-                className="rc-button"
-                onClick={() => {
-                    safeGameMutate((game) => {
-                        game.reset();
-                    });
-                    chessboardRef.current.clearPremoves();
-                }}
-            >
-                reset
-            </button>
-            <button
-                className="rc-button"
-                onClick={() => {
-                    safeGameMutate((game) => {
-                        game.undo();
-                    });
-                    chessboardRef.current.clearPremoves();
-                }}
-            >
-                undo
-            </button> */}
+
+            <Result open={stage === STAGE.RESULT} result={result} parentId={"board-parent"}
+                playerColor={playerColor} />
         </div>
     );
 }
+
+const mapStateToProps = (state) => ({
+    playerColor: state.play.playerColor,
+    game: state.play.game,
+    stage: state.play.stage,
+    result: state.play.result,
+})
+
+export default connect(mapStateToProps)(Board);

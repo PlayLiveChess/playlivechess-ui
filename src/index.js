@@ -13,6 +13,8 @@ import Error from './components/Error';
 import Home from './routes/Home';
 import About from './routes/About';
 import Play from './routes/Play';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 const router = createBrowserRouter([
   {
@@ -46,9 +48,11 @@ const router = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <Provider store={store}>
+  {/* <React.StrictMode> */}
     <RouterProvider router={router} />
-  </React.StrictMode>
+  {/* </React.StrictMode> */}
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function
