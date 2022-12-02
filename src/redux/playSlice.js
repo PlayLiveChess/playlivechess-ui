@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import Chess from 'chess.js';
 
 export const STAGE = {
     PRE_GAME: 'PRE_GAME',
@@ -7,8 +8,8 @@ export const STAGE = {
 }
 
 export const COLOR = {
-    WHITE: 'WHITE',
-    BLACK: 'BLACK'
+    WHITE: 'white',
+    BLACK: 'black'
 }
 
 export const playSlice = createSlice({
@@ -18,11 +19,14 @@ export const playSlice = createSlice({
         preGamePhase: 0,
         activeStep: 0,
         gameServerAddress: undefined,
-        game: undefined,
+        // this gives warning, but we have to settle somewhere :)
+        game: new Chess(),
         moves: [],
+        coms: [],
         playerDetails: undefined,
         opponentDetails: undefined,
         playerColor: COLOR.WHITE,
+        pending: '',
     },
     reducers: {
         // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -34,6 +38,7 @@ export const playSlice = createSlice({
         },
         nextPreGamePhase: (state) => {
             state.preGamePhase += 1
+            state.activeStep = -1
         },
         incrementActiveStep: (state) => {
             state.activeStep += 1
@@ -44,11 +49,14 @@ export const playSlice = createSlice({
         setGameServerAddress: (state, action) => {
             state.gameServerAddress = action.payload
         },
-        setGame: (state, action) => {
-            state.game = action.payload
-        },
         appendMove: (state, action) => {
             state.moves.push(action.payload)
+        },
+        appendCom: (state, action) => {
+            state.coms.push(action.payload)
+        },
+        clearCom: (state) => {
+            state.coms = []
         },
         clearMoves: (state) => {
             state.moves = []
@@ -61,13 +69,42 @@ export const playSlice = createSlice({
         },
         setPlayerColor: (state, action) => {
             state.playerColor = action.payload
+        },
+        setPending: (state, action) => {
+            state.pending = action.payload
+        },
+        handleReply: (state, action) => {
+            let data = action.payload
+            if(data.success === 'true') {
+                if(state.pending === 'queue')
+                    state.activeStep += 1
+                state.pending = ''
+            }
+        },
+        startGame: (state, action) => {
+            state.opponentDetails = action.payload.opponent
+            state.playerColor = action.payload.color
+            state.stage = STAGE.IN_GAME
+            state.game = new Chess()
+        },
+        setGame: (state, action) => {
+            state.game = action.payload
+        },
+        makeMove: (state, action) => {
+            var gameCopy = {...state.game}
+            let move = gameCopy.move(action.payload)
+            state.game = gameCopy
+            
+            if(move)
+                state.moves.push(action.payload)
         }
     },
 })
 
 // Action creators are generated for each case reducer function
 export const { setStage, nextPreGamePhase, incrementActiveStep, setActiveStep,
-    setGameServerAddress, setGame, appendMove, clearMoves, setPlayerDetails,
-    setOpponentDetails, setPlayerColor } = playSlice.actions
+    setGameServerAddress, appendMove, clearMoves, setPlayerDetails, setGame, makeMove,
+    setOpponentDetails, setPlayerColor, setPending, handleReply, startGame,
+    appendCom, clearCom } = playSlice.actions
 
 export default playSlice.reducer

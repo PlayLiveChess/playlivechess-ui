@@ -4,10 +4,11 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { connect } from 'react-redux';
 
-export default function Coms(props) {
+function Coms({coms, height}) {
     return (
-    <Card variant="outlined" style={{height: props.height}}>
+    <Card variant="outlined" style={{height: height}}>
         <CardHeader
             title="Communication"
             style={{maxHeight: '30%'}}
@@ -15,7 +16,7 @@ export default function Coms(props) {
         <CardContent style={{ maxHeight: '70%', overflowY: 'auto'}}>
             <Grid container>
             {
-                props.coms.map((com, index) => {
+                coms.map((com, index) => {
                     return (
                         <Grid container key={index}>
                         <Grid item xs={2} >
@@ -35,7 +36,7 @@ export default function Coms(props) {
                         <Grid item xs={6} >
                             <Typography sx={{fontSize: 14}} color="text.secondary"
                                 gutterBottom>
-                                    {com.value}
+                                    {com.value ? com.value : com.success ? com.success : ''}
                             </Typography>
                         </Grid>
                         </Grid>
@@ -47,3 +48,9 @@ export default function Coms(props) {
     </Card>
     )
 }
+
+const mapStateToProps = (state) => ({
+    coms: state.play.coms
+})
+
+export default connect(mapStateToProps) (Coms);

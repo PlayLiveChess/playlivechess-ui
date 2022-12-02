@@ -2,19 +2,20 @@ import { CardHeader, Grid } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import { connect } from 'react-redux';
 
-export default function Moves(props) {
+function Moves({height, moves}) {
     const pairsOfMoves = []
-    for(let index = 0; props.moves.length && index < props.moves.length / 2; ++index) {
-        let pair = [props.moves[index * 2], ]
-        if(index * 2 + 1 < props.moves.length)
-            pair.push(props.moves[index * 2 + 1])
+    for(let index = 0; moves.length && index < moves.length / 2; ++index) {
+        let pair = [moves[index * 2], ]
+        if(index * 2 + 1 < moves.length)
+            pair.push(moves[index * 2 + 1])
         if(pair.length)
             pairsOfMoves.push(pair)
     }
 
     return (
-    <Card variant="outlined" style={{height: props.height}}>
+    <Card variant="outlined" style={{height: height}}>
         <CardHeader
             title="Moves"
             style={{maxHeight: '20%'}}
@@ -25,19 +26,19 @@ export default function Moves(props) {
                 pairsOfMoves.map((move, index) => {
                     return (
                         <Grid container key={index}>
-                        <Grid item sx={2}>
+                        <Grid item xs={2}>
                             <Typography sx={{fontSize: 14}} color="text.primary"
                                 gutterBottom>
                                     {index + 1}
                             </Typography>
                         </Grid>
-                        <Grid item sx={5}>
+                        <Grid item xs={5}>
                         <Typography sx={{fontSize: 14}} color="text.secondary"
                             gutterBottom>
                                 {move[0]}
                         </Typography>
                         </Grid>
-                        <Grid item sx={5}>
+                        <Grid item xs={5}>
                         <Typography sx={{fontSize: 14}} color="text.secondary"
                             gutterBottom>
                                 {move[1]}
@@ -52,3 +53,9 @@ export default function Moves(props) {
     </Card>
     )
 }
+
+const mapStateToProps = (state) => ({
+    moves: state.play.moves,
+})
+
+export default connect(mapStateToProps) (Moves);

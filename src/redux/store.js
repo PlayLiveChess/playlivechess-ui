@@ -5,4 +5,8 @@ export default configureStore({
     reducer: {
         play: playReducer,
     },
+    middleware: getDefaultMiddleware =>
+        getDefaultMiddleware({
+            serializableCheck: false,
+        }),
 })

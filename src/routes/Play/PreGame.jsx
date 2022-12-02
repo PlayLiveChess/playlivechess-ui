@@ -35,12 +35,9 @@ const startConnectPhase =  async (dispatch) => {
     await new Promise(r => setTimeout(r, 2000));
     dispatch(setGameServerAddress('localhost:8000'))
     dispatch(incrementActiveStep())
-
-    await new Promise(r => setTimeout(r, 2000));
-    dispatch(incrementActiveStep())
 }
 
-function PreGame({height, preGamePhase, activeStep}) {
+function PreGame({height, preGamePhase, activeStep, sendJSON}) {
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -74,9 +71,12 @@ function PreGame({height, preGamePhase, activeStep}) {
                 </Stepper>
             </CardContent>
             <CardActions sx={{maxHeight: '10%', width: '100%', overflowY: 'auto', position: 'absolute', bottom: '0px'}}>
-                <Button disabled={!(preGamePhase === 0 && activeStep === 2)} variant="outlined" size="large" sx={{width: '100%'}}
-                    onClick={(ev) => {
-                        console.log('button clicked!')
+                <Button disabled={!(preGamePhase === 1 && activeStep === -1)} variant="outlined" size="large" sx={{width: '100%'}}
+                    onClick={() => {
+                        sendJSON({
+                            'type': 'queue'
+                        })
+                        dispatch(incrementActiveStep())
                     }}
                 >
                     Start Game
