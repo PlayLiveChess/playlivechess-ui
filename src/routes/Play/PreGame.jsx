@@ -33,7 +33,7 @@ const startConnectPhase =  async (dispatch) => {
     dispatch(setActiveStep(0))
 
     await new Promise(r => setTimeout(r, 2000));
-    dispatch(setGameServerAddress('localhost:8000'))
+    dispatch(setGameServerAddress('13.233.194.101:49157'))
     dispatch(incrementActiveStep())
 }
 
