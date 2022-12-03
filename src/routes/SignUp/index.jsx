@@ -74,7 +74,7 @@ function SignUp({ username, signupPending, signupError, dispatch }) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Snackbar open={signupError} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={signupError ? true : false} autoHideDuration={6000} onClose={handleClose}>
         <Alert variant='filled' onClose={handleClose} severity="error" sx={{ width: '100%' }}>
           {signupError}
         </Alert>

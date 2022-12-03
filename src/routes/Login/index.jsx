@@ -75,7 +75,7 @@ function Login({ username, loginPending, loginError, dispatch }) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Snackbar open={loginError} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={loginError ? true : false} autoHideDuration={6000} onClose={handleClose}>
         <Alert variant='filled' onClose={handleClose} severity="error" sx={{ width: '100%' }}>
           {loginError}
         </Alert>

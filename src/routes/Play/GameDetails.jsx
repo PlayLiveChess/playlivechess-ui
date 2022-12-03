@@ -34,7 +34,7 @@ function GameDetails({ height, playerDetails, opponentDetails, playerColor, game
 
 const mapStateToProps = (state) => ({
     playerDetails: state.play.playerDetails,
-    opponentDetails: state.play.playerDetails,
+    opponentDetails: state.play.opponentDetails,
     playerColor: state.play.playerColor,
     game: state.play.game
 })
