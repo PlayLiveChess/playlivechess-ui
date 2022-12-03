@@ -32,10 +32,29 @@ const startGameSteps = [
 const startConnectPhase =  async (dispatch) => {
     dispatch(setActiveStep(0))
 
-    await new Promise(r => setTimeout(r, 2000));
-    console.log(process.env.REACT_APP_STATIC_GAMESERVER)
-    dispatch(setGameServerAddress(process.env.REACT_APP_STATIC_GAMESERVER))
-    dispatch(incrementActiveStep())
+    if(process.env.REACT_APP_USE_MANAGER === 'true') {
+        fetch('http://'+process.env.REACT_APP_MANAGER+'/available-gameserver/', {
+            'TYPE': 'GET'
+        })
+        .then(resp => {
+            if(resp.ok)
+                return resp.json()
+            throw Error('Error while fetching gameserver details!')
+        })
+        .then(resp => {
+            dispatch(setGameServerAddress(resp.available))
+            dispatch(incrementActiveStep())
+        })
+        .catch(error => {
+            console.log(error.message)
+        })
+    }
+    else {
+        await new Promise(r => setTimeout(r, 2000));
+        console.log(process.env.REACT_APP_STATIC_GAMESERVER)
+        dispatch(setGameServerAddress(process.env.REACT_APP_STATIC_GAMESERVER))
+        dispatch(incrementActiveStep())
+    }
 }
 
 function PreGame({height, preGamePhase, activeStep, playerDetails, sendJSON}) {
