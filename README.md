@@ -72,7 +72,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 ### Environment variables
 
 ```shell
-REACT_APP_USE_MASTER=false
+REACT_APP_USE_MANAGER=true
 REACT_APP_GAME_WITHOUT_AUTH=true
 REACT_APP_MANAGER=65.0.199.90:8000
 REACT_APP_STATIC_GAMESERVER=13.233.253.3:49153
