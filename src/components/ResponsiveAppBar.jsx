@@ -20,11 +20,11 @@ const pages = [
     // show: always, auth, noauth
     'show': 'always'
   },
-  {
-    'text': 'About',
-    'link': '/about',
-    'show': 'always'
-  },
+  // {
+  //   'text': 'About',
+  //   'link': '/about',
+  //   'show': 'always'
+  // },
   {
     'text': 'Login',
     'link': '/login',

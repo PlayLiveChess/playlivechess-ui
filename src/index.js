@@ -11,7 +11,6 @@ import Login from './routes/Login';
 import SignUp from './routes/SignUp';
 import Error from './components/Error';
 import Home from './routes/Home';
-import About from './routes/About';
 import Play from './routes/Play';
 import { Provider } from 'react-redux';
 import store from './redux/store';
@@ -34,10 +33,10 @@ const router = createBrowserRouter([
         path: "signup",
         element: <SignUp />,
       },
-      {
-        path: "about",
-        element: <About />,
-      },
+      // {
+      //   path: "about",
+      //   element: <About />,
+      // },
       {
         path: "play",
         element: <Play />,
