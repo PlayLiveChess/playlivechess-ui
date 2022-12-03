@@ -68,3 +68,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+### Environment variables
+
+```shell
+REACT_APP_USE_MASTER=false
+REACT_APP_STATIC_GAMESERVER=13.233.253.3:49153
+REACT_APP_STATIC_AUTH=localhost:8000
+```

@@ -12,6 +12,8 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
+import { setUsername } from '../redux/userSlice';
+import { connect } from 'react-redux';
 
 const pages = [
   {
@@ -36,9 +38,12 @@ const pages = [
     'show': 'noauth'
   }
 ];
-const settings = ['Profile', 'Logout'];
+const settings = [{
+  'text': 'Logout',
+  'onClick': (dispatch) => dispatch(setUsername(''))
+}];
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({ username, dispatch }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -110,13 +115,18 @@ function ResponsiveAppBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page, index) => (
-                <Link to={page.link} key={index} >
-                <MenuItem key={page.text} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page.text}</Typography>
-                </MenuItem>
-                </Link>
-              ))}
+              {pages.map((page, index) => {
+                if((username && page.show === 'noauth') ||
+                  (!username && page.show === 'auth'))
+                  return <span key={index}></span>
+                return (
+                  <Link to={page.link} key={index} >
+                  <MenuItem key={page.text} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page.text}</Typography>
+                  </MenuItem>
+                  </Link>
+                )
+              })}
             </Menu>
           </Box>
           <Avatar sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} variant="rounded" src="/plc.png" alt="PLC">
@@ -140,20 +150,25 @@ function ResponsiveAppBar() {
             PLC
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page, index) => (
-              <Link to={page.link} key={index}>
-                <Button
-                  key={page.text}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  {page.text}
-                </Button>
-              </Link>
-            ))}
+            {pages.map((page, index) => {
+              if((username && page.show === 'noauth') ||
+              (!username && page.show === 'auth'))
+                return <span key={index}></span>
+              return (
+                <Link to={page.link} key={index}>
+                  <Button
+                    key={page.text}
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                  >
+                    {page.text}
+                  </Button>
+                </Link>
+              )
+            })}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0, display: username ? '' : 'none' }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar />
@@ -175,9 +190,15 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              <MenuItem>
+                <Typography textAlign="center">{username}</Typography>
+              </MenuItem>
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting.text} onClick={() => {
+                  handleCloseUserMenu()
+                  setting.onClick(dispatch)
+                }}>
+                  <Typography textAlign="center">{setting.text}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -187,4 +208,9 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
+
+const mapStateToProps = (state) => ({
+  username: state.user.username
+})
+
+export default connect(mapStateToProps) (ResponsiveAppBar);

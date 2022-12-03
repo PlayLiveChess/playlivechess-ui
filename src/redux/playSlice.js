@@ -24,7 +24,8 @@ export const playSlice = createSlice({
         moves: [],
         coms: [],
         playerDetails: {
-            'name': 'Player',
+            'name': localStorage.getItem('username') ?
+                localStorage.getItem('username') : 'Player',
             'rating': 1000
         },
         opponentDetails: {

@@ -7,6 +7,7 @@ import Board from "./Board";
 import GameDetails from "./GameDetails";
 import PreGame from "./PreGame";
 import { w3cwebsocket } from "websocket";
+import { Navigate } from "react-router-dom";
 
 const MIN_DETAILS_HEIGHT = 650
 const OUTCOME_MAP = {
@@ -19,7 +20,7 @@ const OUTCOME_MAP = {
     7: 'THREEFOLD_REPETITION ',
 }
 
-function Play({stage, gameServerAddress, playerColor, result, dispatch}) {
+function Play({stage, gameServerAddress, username, dispatch}) {
     const [chessboardSize, setChessboardSize] = useState(MIN_DETAILS_HEIGHT);
     const [socket, setSocket] = useState(undefined)
 
@@ -104,6 +105,9 @@ function Play({stage, gameServerAddress, playerColor, result, dispatch}) {
             console.log('Socket is not ready!')
     }
 
+    if (!username)
+        return <Navigate replace to="/login" />
+
     return (
         <Container>
         <Box sx={{ flexGrow: 1, my: 2 }}>
@@ -135,6 +139,7 @@ const mapStateToProps = (state) => ({
     game: state.play.game,
     playerColor: state.play.playerColor,
     result: state.play.result,
+    username: state.user.username,
 })
 
 export default connect(mapStateToProps) (Play);

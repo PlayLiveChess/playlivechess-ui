@@ -6,30 +6,80 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { setLoginError, setLoginPending, setUsername } from '../../redux/userSlice';
+import { setPlayerDetails } from '../../redux/playSlice';
+import { connect } from 'react-redux';
+import { Alert, Snackbar } from '@mui/material';
 
 const theme = createTheme();
 
-export default function Login() {
+function Login({ username, loginPending, loginError, dispatch }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    let obj = {
+      'username': data.get('username'),
+      'password': data.get('password'),
+    }
+
+    dispatch(setLoginPending(true))
+
+    fetch('http://' + process.env.REACT_APP_STATIC_AUTH + '/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(obj)
+    })
+    .then(resp => {
+      if (resp.ok)
+        return resp.json()
+      throw Error(resp.status + ': ' + resp.statusText)
+    })
+    .then(resp => {
+      if (resp.success === 'true') {
+        dispatch(setLoginPending(false))
+        dispatch(setUsername(obj.username))
+        dispatch(setPlayerDetails({
+          'name': obj.username,
+          'rating': 1000
+        }))
+        console.log('login successful!')
+      }
+      else
+        throw Error('Invalid credentials!')
+    })
+    .catch(error => {
+      dispatch(setLoginError(error.message))
+      dispatch(setLoginPending(false))
+      console.log(error.message)
+    })
+  };
+
+  if(username)
+    return <Navigate replace to="/" />
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    dispatch(setLoginError(false));
   };
 
   return (
     <ThemeProvider theme={theme}>
+      <Snackbar open={loginError} autoHideDuration={6000} onClose={handleClose}>
+        <Alert variant='filled' onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+          {loginError}
+        </Alert>
+      </Snackbar>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -46,15 +96,15 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Login
           </Typography>
+
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Username"
+              name="username"
               autoFocus
             />
             <TextField
@@ -65,26 +115,17 @@ export default function Login() {
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
+              disabled={loginPending}
               sx={{ mt: 3, mb: 2 }}
             >
               Login
             </Button>
             <Grid container justifyContent="flex-end">
-              {/* <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid> */}
               <Grid item>
                 <Link to="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
@@ -97,3 +138,11 @@ export default function Login() {
     </ThemeProvider>
   );
 }
+
+const mapStateToProps = (state) => ({
+  username: state.user.username,
+  loginPending: state.user.loginPending,
+  loginError: state.user.loginError
+})
+
+export default connect(mapStateToProps) (Login);
