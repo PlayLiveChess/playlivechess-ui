@@ -36,7 +36,12 @@ const pages = [
     'text': 'Sign Up',
     'link': '/signup',
     'show': 'noauth'
-  }
+  },
+  {
+    'text': 'Evaluate',
+    'link': '/evaluate',
+    'show': 'always'
+  },
 ];
 const settings = [{
   'text': 'Logout',

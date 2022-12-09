@@ -14,6 +14,7 @@ import Home from './routes/Home';
 import Play from './routes/Play';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import Evaluate from './routes/Evaluate';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "play",
         element: <Play />,
+      },
+      {
+        path: "evaluate",
+        element: <Evaluate />,
       },
     ],
   },

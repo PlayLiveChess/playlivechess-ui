@@ -6,7 +6,7 @@ import Moves from "./Moves";
 import Player from "./Player";
 
 
-function GameDetails({ height, playerDetails, opponentDetails, playerColor, game }) {
+function GameDetails({ height, playerDetails, opponentDetails, playerColor, game, moves }) {
     return (
         <Box height={height} width={"100%"}>
             <Stack height={"100%"} width={"100%"} spacing={2}>
@@ -16,12 +16,11 @@ function GameDetails({ height, playerDetails, opponentDetails, playerColor, game
                         active={game.turn() !== playerColor.charAt(0)} />
                 </Box>
                 <Box height={"40%"} width={"100%"} >
-                    <Moves height={"100%"}
-                        moves={Array(50).fill('e4')} />
+                    <Moves height={"100%"} moves={moves} />
                 </Box>
                 
                 <Box height={"34%"} width={"100%"}>
-                    <Coms height={"100%"} coms={Array(50).fill({'direction': 'up', 'type': 'move', 'value': 'e4'})} />
+                    <Coms height={"100%"} />
                 </Box>
                 <Box height={"10%"} width={"100%"}>
                     <Player color={playerColor} name={playerDetails.name}
@@ -36,7 +35,8 @@ const mapStateToProps = (state) => ({
     playerDetails: state.play.playerDetails,
     opponentDetails: state.play.opponentDetails,
     playerColor: state.play.playerColor,
-    game: state.play.game
+    game: state.play.game,
+    moves: state.play.moves
 })
 
 export default connect(mapStateToProps) (GameDetails);

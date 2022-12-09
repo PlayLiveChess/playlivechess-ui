@@ -105,6 +105,7 @@ function Play({stage, gameServerAddress, username, dispatch}) {
             console.log('Socket is not ready!')
     }
 
+    console.log(process.env.REACT_APP_GAME_WITHOUT_AUTH)
     if (!username && process.env.REACT_APP_GAME_WITHOUT_AUTH !== 'true')
         return <Navigate replace to="/login" />
 

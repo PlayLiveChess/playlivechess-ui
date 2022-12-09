@@ -2,7 +2,6 @@ import { CardHeader, Grid } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import { connect } from 'react-redux';
 
 function Moves({height, moves}) {
     const pairsOfMoves = []
@@ -54,8 +53,4 @@ function Moves({height, moves}) {
     )
 }
 
-const mapStateToProps = (state) => ({
-    moves: state.play.moves,
-})
-
-export default connect(mapStateToProps) (Moves);
+export default Moves;
