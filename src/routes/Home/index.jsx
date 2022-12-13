@@ -11,18 +11,6 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import Container from '@mui/material/Container';
 
 const tiers = [
-    // {
-    //     title: 'UI',
-    //     description: [
-    //         'React application',
-    //         'Modern design with MUI',
-    //         'Accessible design',
-    //         'Responsive UI'
-    //     ],
-    //     link: 'https://github.com/PlayLiveChess/playlivechess-ui',
-    //     buttonText: 'See Source',
-    //     buttonVariant: 'outlined',
-    // },
     {
         title: 'Game',
         description: [
@@ -56,6 +44,30 @@ const tiers = [
             'SQL under the hood',
         ],
         link: 'https://github.com/PlayLiveChess/playlivechess-auth',
+        buttonText: 'See Source',
+        buttonVariant: 'outlined',
+    },
+    {
+        title: 'Evaluate',
+        description: [
+            'Evaluates any position',
+            'FEN string input',
+            'Stockfish engine',
+            '>0.5 means white better',
+        ],
+        link: 'https://github.com/PlayLiveChess/playlivechess-evaluate',
+        buttonText: 'See Source',
+        buttonVariant: 'outlined',
+    },
+    {
+        title: 'UI',
+        description: [
+            'React application',
+            'Modern design with MUI',
+            'Accessible design',
+            'Responsive UI'
+        ],
+        link: 'https://github.com/PlayLiveChess/playlivechess-ui',
         buttonText: 'See Source',
         buttonVariant: 'outlined',
     },
