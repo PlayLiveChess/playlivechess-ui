@@ -55,7 +55,7 @@ function Evaluate() {
                 throw Error(resp.status + ': ' + resp.statusText)
             })
             .then(resp => {
-                if (resp.score)
+                if (resp.score !== undefined)
                     setValue(resp.score)
                 else
                     throw Error(resp.error)
