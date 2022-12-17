@@ -42,7 +42,7 @@ function Evaluate() {
         let obj = {
             'position': game.fen()
         }
-        fetch('http://' + process.env.REACT_APP_STATIC_EVALUATE + '/eval-fen/', {
+        fetch('https://' + process.env.REACT_APP_STATIC_EVALUATE + '/eval-fen/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

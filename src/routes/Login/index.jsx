@@ -31,7 +31,7 @@ function Login({ username, loginPending, loginError, dispatch }) {
 
     dispatch(setLoginPending(true))
 
-    fetch('http://' + process.env.REACT_APP_STATIC_AUTH + '/auth/login', {
+    fetch('https://' + process.env.REACT_APP_STATIC_AUTH + '/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

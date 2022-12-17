@@ -30,7 +30,7 @@ function SignUp({ username, signupPending, signupError, dispatch }) {
 
     dispatch(setSignUpPending(true))
 
-    fetch('http://' + process.env.REACT_APP_STATIC_AUTH + '/auth/create_user', {
+    fetch('https://' + process.env.REACT_APP_STATIC_AUTH + '/auth/create_user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -39,7 +39,7 @@ function Play({stage, gameServerAddress, username, dispatch}) {
 
     useEffect(() => {
         if(gameServerAddress) {
-            let url = 'ws://' + gameServerAddress + '/ws/connect/'
+            let url = 'wss://' + gameServerAddress + '/ws/connect/'
             let client = new w3cwebsocket(url)
 
             client.onopen = async () => {
